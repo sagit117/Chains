@@ -1,4 +1,4 @@
-package ru.axel;
+package ru.axel.chains;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -7,30 +7,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Optional;
 
-abstract class Block<P, R> {
-    final protected P externalParameter;
-    final protected R result;
-
-    public Block(P externalParameter) {
-        this.externalParameter = externalParameter;
-        result = execute();
-    }
-
+public class BlockFactory {
     @SuppressWarnings("unchecked")
-    public <NextBlock extends Block<?,?>> NextBlock next(
-            @NotNull Class<NextBlock> nextBlockClass
+    public static <NextBlock extends Block<?,?>, P> @NotNull NextBlock next(
+            @NotNull Class<NextBlock> nextBlockClass,
+            P externalParameter
     ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         final Optional<Constructor<NextBlock>> optionalConstructor = Arrays
                 .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
                 .findFirst();
         final Constructor<NextBlock> constructor = optionalConstructor.orElseThrow();
 
-        return constructor.newInstance(result);
+        return constructor.newInstance(externalParameter);
     }
-
-    public R getResult() {
-        return result;
-    }
-
-    abstract @NotNull R execute();
 }

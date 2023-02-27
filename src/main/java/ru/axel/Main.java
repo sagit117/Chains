@@ -1,6 +1,8 @@
 package ru.axel;
 
 import org.jetbrains.annotations.NotNull;
+import ru.axel.chains.Block;
+import ru.axel.chains.BlockFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -17,7 +19,7 @@ class TestBlock extends Block<String, String> {
     }
 
     @Override
-    @NotNull String execute() {
+    public @NotNull String execute() {
         return externalParameter + " chains";
     }
 }
@@ -28,7 +30,7 @@ class PrintTest extends Block<String, String> {
     }
 
     @Override
-    @NotNull String execute() {
+    public @NotNull String execute() {
         System.out.println(externalParameter);
         return externalParameter;
     }
