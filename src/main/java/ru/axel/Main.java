@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Main {
     public static void main(String[] args) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         System.out.println("TEST START");
-        BlockFactory.next(TestBlock.class, "test").next(PrintTest.class).next(PrintTest.class);
+        BlockFactory.first(TestBlock.class, "test").next(PrintTest.class).next(PrintTest.class);
     }
 }
 

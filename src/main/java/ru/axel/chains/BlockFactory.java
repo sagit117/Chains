@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class BlockFactory {
     @SuppressWarnings("unchecked")
-    public static <NextBlock extends Block<?,?>, P> @NotNull NextBlock next(
+    public static <NextBlock extends Block<?,?>, P> @NotNull NextBlock first(
             @NotNull Class<NextBlock> nextBlockClass,
             P externalParameter
     ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
