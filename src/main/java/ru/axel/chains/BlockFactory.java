@@ -10,12 +10,12 @@ import java.util.Optional;
 public class BlockFactory {
     @SuppressWarnings("unchecked")
     public static <NextBlock extends Block<?,?>, P> @NotNull NextBlock first(
-            @NotNull Class<NextBlock> nextBlockClass,
-            P externalParameter
+        @NotNull Class<NextBlock> nextBlockClass,
+        P externalParameter
     ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         final Optional<Constructor<NextBlock>> optionalConstructor = Arrays
-                .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
-                .findFirst();
+            .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
+            .findFirst();
         final Constructor<NextBlock> constructor = optionalConstructor.orElseThrow();
 
         return constructor.newInstance(externalParameter);

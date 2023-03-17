@@ -9,14 +9,14 @@ import java.util.Optional;
 
 /**
  * Блок цепи.
- * @param <P> входящий параметр.
- * @param <R> возвращаемый результат.
+ * @param <Parameter> входящий параметр.
+ * @param <Result> возвращаемый результат.
  */
-public abstract class Block<P, R> {
-    final protected P externalParameter;
-    final protected R result;
+public abstract class Block<Parameter, Result> {
+    final protected Parameter externalParameter;
+    final protected Result result;
 
-    public Block(P externalParameter) {
+    public Block(Parameter externalParameter) {
         this.externalParameter = externalParameter;
         result = execute();
     }
@@ -33,9 +33,24 @@ public abstract class Block<P, R> {
         return constructor.newInstance(result);
     }
 
-    public R getResult() {
+    @SuppressWarnings("unchecked")
+    public <NextBlock extends Block<?,?>> NextBlock next(
+        @NotNull Class<NextBlock> nextBlockClass,
+        @NotNull PrepareResult<Result,?> prepareResult
+    ) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        final Optional<Constructor<NextBlock>> optionalConstructor = Arrays
+            .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
+            .findFirst();
+        final Constructor<NextBlock> constructor = optionalConstructor.orElseThrow();
+
+        final Object res = prepareResult.prepare(result);
+
+        return constructor.newInstance(res);
+    }
+
+    public Result getResult() {
         return result;
     }
 
-    protected abstract @NotNull R execute();
+    protected abstract @NotNull Result execute();
 }
