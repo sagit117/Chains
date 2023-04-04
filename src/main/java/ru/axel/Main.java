@@ -10,7 +10,8 @@ public class Main {
         BlockFactory
                 .first(TestBlock.class, "test")
                 .next(PrintTest.class, parameter -> parameter + 1)
-                .next(PrintTest.class, parameter -> parameter + 2);
+                .next(PrintTest.class, parameter -> parameter + 2)
+                .getResult();
     }
 }
 

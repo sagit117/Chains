@@ -14,11 +14,10 @@ import java.util.Optional;
  */
 public abstract class Block<Parameter, Result> {
     final protected Parameter externalParameter;
-    final protected Result result;
+//    protected Result result;
 
     public Block(Parameter externalParameter) {
         this.externalParameter = externalParameter;
-        result = execute();
     }
 
     @SuppressWarnings("unchecked")
@@ -29,8 +28,10 @@ public abstract class Block<Parameter, Result> {
             .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
             .findFirst();
         final Constructor<NextBlock> constructor = optionalConstructor.orElseThrow();
+        final NextBlock nextBlock = constructor.newInstance(execute());
+//        nextBlock.execute();
 
-        return constructor.newInstance(result);
+        return nextBlock;
     }
 
     @SuppressWarnings("unchecked")
@@ -42,14 +43,15 @@ public abstract class Block<Parameter, Result> {
             .stream((Constructor<NextBlock>[]) nextBlockClass.getConstructors())
             .findFirst();
         final Constructor<NextBlock> constructor = optionalConstructor.orElseThrow();
+        final Object res = prepareResult.prepare(execute());
+        final NextBlock nextBlock = constructor.newInstance(res);
+//        nextBlock.execute();
 
-        final Object res = prepareResult.prepare(result);
-
-        return constructor.newInstance(res);
+        return nextBlock;
     }
 
     public Result getResult() {
-        return result;
+        return execute();
     }
 
     protected abstract @NotNull Result execute();
